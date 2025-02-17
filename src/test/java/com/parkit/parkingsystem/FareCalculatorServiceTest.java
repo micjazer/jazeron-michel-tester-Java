@@ -124,4 +124,37 @@ public class FareCalculatorServiceTest {
         assertEquals( (24 * Fare.CAR_RATE_PER_HOUR) , ticket.getPrice());
     }
 
+    // Teste le calcul du tarif pour une voiture avec une remise de 5 %.
+    @Test
+    public void calculateFareCarWithDiscount() {
+    Date inTime = new Date();
+    inTime.setTime(System.currentTimeMillis() - (60 * 60 * 1000)); // 1 heure
+    Date outTime = new Date();
+    ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
+
+    ticket.setInTime(inTime);
+    ticket.setOutTime(outTime);
+    ticket.setParkingSpot(parkingSpot);
+
+    // Appliquer une remise de 5 %
+    fareCalculatorService.calculateFare(ticket, true);
+    assertEquals(ticket.getPrice(), Fare.CAR_RATE_PER_HOUR * 0.95);
+    }
+
+    // Teste le calcul du tarif pour une moto avec une remise de 5 %.
+    @Test
+    public void calculateFareBikeWithDiscount() {
+    Date inTime = new Date();
+    inTime.setTime(System.currentTimeMillis() - (60 * 60 * 1000)); // 1 heure
+    Date outTime = new Date();
+    ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.BIKE, false);
+
+    ticket.setInTime(inTime);
+    ticket.setOutTime(outTime);
+    ticket.setParkingSpot(parkingSpot);
+
+    // Appliquer une remise de 5 %
+    fareCalculatorService.calculateFare(ticket, true);
+    assertEquals(ticket.getPrice(), Fare.BIKE_RATE_PER_HOUR * 0.95);
+    }
 }
