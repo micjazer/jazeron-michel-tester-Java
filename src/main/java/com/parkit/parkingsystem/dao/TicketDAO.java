@@ -76,14 +76,44 @@ public class TicketDAO {
             PreparedStatement ps = con.prepareStatement(DBConstants.UPDATE_TICKET);
             ps.setDouble(1, ticket.getPrice());
             ps.setTimestamp(2, new Timestamp(ticket.getOutTime().getTime()));
-            ps.setInt(3,ticket.getId());
+            ps.setInt(3, ticket.getId());
             ps.execute();
             return true;
-        }catch (Exception ex){
-            logger.error("Error saving ticket info",ex);
-        }finally {
+        } catch (Exception ex) {
+            logger.error("Error saving ticket info", ex);
+        } finally {
             dataBaseConfig.closeConnection(con);
         }
         return false;
     }
+
+    /**
+     * Compte le nombre de tickets dans la base de données pour un numéro de plaque donné.
+     *
+     * @param vehicleRegNumber Le numéro de plaque du véhicule.
+     * @return Le nombre de tickets associés à ce véhicule.
+     */
+    public int getNbTicket(String vehicleRegNumber) {
+        Connection con = null;
+        int ticketCount = 0;
+        try {
+            con = dataBaseConfig.getConnection();
+            PreparedStatement ps = con.prepareStatement(DBConstants.COUNT_TICKETS);
+            ps.setString(1, vehicleRegNumber);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                ticketCount = rs.getInt(1);
+            }
+            dataBaseConfig.closeResultSet(rs);
+            dataBaseConfig.closePreparedStatement(ps);
+        } catch (Exception ex) {
+            logger.error("Error counting tickets for vehicle registration number: " + vehicleRegNumber, ex);
+        } finally {
+            dataBaseConfig.closeConnection(con);
+        }
+        return ticketCount;
+    }
 }
+
+
+
