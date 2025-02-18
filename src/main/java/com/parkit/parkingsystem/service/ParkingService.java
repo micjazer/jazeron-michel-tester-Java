@@ -78,6 +78,50 @@ public class ParkingService {
         return parkingSpot;
     }
 
+    public void processIncomingVehicle() {
+        try {
+            // Lire le type de véhicule et le numéro de plaque
+            ParkingType parkingType = getVehicleType();
+            String vehicleRegNumber = inputReaderUtil.readVehicleRegistrationNumber();
+
+            // Vérifier la disponibilité d'une place de parking
+            ParkingSpot parkingSpot = parkingSpotDAO.getNextAvailableSlot(parkingType);
+            if (parkingSpot != null && parkingSpot.getId() > 0) {
+                parkingSpot.setAvailable(false);
+                parkingSpotDAO.updateParking(parkingSpot);
+
+                // Créer un nouveau ticket
+                Ticket ticket = new Ticket();
+                ticket.setParkingSpot(parkingSpot);
+                ticket.setVehicleRegNumber(vehicleRegNumber);
+                ticket.setPrice(0);
+                ticket.setInTime(new Date());
+                ticketDAO.saveTicket(ticket);
+
+                // Vérifier si l'utilisateur est récurrent
+                int nbTickets = ticketDAO.getNbTicket(vehicleRegNumber);
+                if (nbTickets > 0) {
+                    System.out.println("Heureux de vous revoir ! En tant qu’utilisateur régulier de notre parking, vous allez obtenir une remise de 5%");
+                }
+
+                System.out.println("Veuillez vous garer dans la place numéro: " + parkingSpot.getId());
+                System.out.println("Enregistrement du ticket et démarrage du temps de stationnement. Merci.");
+            } else {
+                System.out.println("Désolé, le parking est complet.");
+            }
+        } catch (Exception e) {
+            System.out.println("Une erreur s'est produite lors de l'entrée du véhicule.");
+            e.printStackTrace();
+        }
+    }
+
+    private ParkingType getVehicleType() {
+        // Méthode pour obtenir le type de véhicule
+        // ... code existant ...
+    }
+}
+
+
     private ParkingType getVehichleType(){
         System.out.println("Please select vehicle type from menu");
         System.out.println("1 CAR");
