@@ -1,18 +1,32 @@
 package com.parkit.parkingsystem;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.*;
+
 import com.parkit.parkingsystem.constants.Fare;
 import com.parkit.parkingsystem.constants.ParkingType;
+import com.parkit.parkingsystem.dao.ParkingSpotDAO;
+import com.parkit.parkingsystem.dao.TicketDAO;
 import com.parkit.parkingsystem.model.ParkingSpot;
 import com.parkit.parkingsystem.model.Ticket;
 import com.parkit.parkingsystem.service.FareCalculatorService;
+import com.parkit.parkingsystem.service.ParkingService;
+import com.parkit.parkingsystem.util.InputReaderUtil;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import java.util.Date;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import java.util.Date;
-
+@ExtendWith(MockitoExtension.class)
 // Classe de test pour la classe FareCalculatorService.
 // Cette classe teste les différentes fonctionnalités de calcul de tarifs du parking en prenant en compte divers scénarios.
 // Scénarios couverts : calcul normal, cas spéciaux comme les entrées futures, parkings courts, parkings prolongés, et réduction pour utilisateur régulier.
@@ -159,26 +173,6 @@ public class FareCalculatorServiceTest {
         assertEquals( (24 * Fare.CAR_RATE_PER_HOUR) , ticket.getPrice());
     }
 
-    @Test
-    public void calculateFareCarWithDiscount() {
-        // Test pour vérifier l'application d'une réduction de 5% pour un utilisateur récurrent avec une voiture.
-        // Cas testé : une voiture garée pendant 1 heure, avec un ticket ayant l'attribut "discount" à true.
-        // La méthode doit renvoyer un tarif représentant 95% du prix standard pour une heure de parking.
-
-        Date inTime = new Date();
-        inTime.setTime(System.currentTimeMillis() - (60 * 60 * 1000)); // 1 heure
-        Date outTime = new Date();
-        ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
-
-        ticket.setInTime(inTime);
-        ticket.setOutTime(outTime);
-        ticket.setParkingSpot(parkingSpot);
-
-        // Appliquer une remise de 5 %
-        fareCalculatorService.calculateFare(ticket, true);
-        assertEquals(ticket.getPrice(), Fare.CAR_RATE_PER_HOUR * 0.95);
-    }
-
     // Vérifie que le stationnement est gratuit pour les durées inférieures à 30 minutes pour une voiture
     @Test
     public void calculateFareCareWithLessThan30minutesParkingTime() {
@@ -213,6 +207,26 @@ public class FareCalculatorServiceTest {
     //Vérifie si la durée du test inférieure à 30 minutes
     private boolean isParkingTimeTooShort(double duration) {
         return duration < 0.5;
+    }
+
+    @Test
+    public void calculateFareCarWithDiscount() {
+        // Test pour vérifier l'application d'une réduction de 5% pour un utilisateur récurrent avec une voiture.
+        // Cas testé : une voiture garée pendant 1 heure, avec un ticket ayant l'attribut "discount" à true.
+        // La méthode doit renvoyer un tarif représentant 95% du prix standard pour une heure de parking.
+
+        Date inTime = new Date();
+        inTime.setTime(System.currentTimeMillis() - (60 * 60 * 1000)); // 1 heure
+        Date outTime = new Date();
+        ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
+
+        ticket.setInTime(inTime);
+        ticket.setOutTime(outTime);
+        ticket.setParkingSpot(parkingSpot);
+
+        // Appliquer une remise de 5 %
+        fareCalculatorService.calculateFare(ticket, true);
+        assertEquals(ticket.getPrice(), Fare.CAR_RATE_PER_HOUR * 0.95);
     }
 
     @Test

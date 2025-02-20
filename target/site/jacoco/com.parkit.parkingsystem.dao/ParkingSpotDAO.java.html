@@ -16,45 +16,58 @@ import java.sql.ResultSet;
 
 <span class="nc" id="L17">    public DataBaseConfig dataBaseConfig = new DataBaseConfig();</span>
 
-    public int getNextAvailableSlot(ParkingType parkingType){
-<span class="nc" id="L20">        Connection con = null;</span>
-<span class="nc" id="L21">        int result=-1;</span>
+    /**
+     * Récupère le prochain emplacement de stationnement disponible pour un type de véhicule donné.
+     *
+     * @param parkingType Le type de stationnement (voiture ou moto).
+     * @return L'identifiant du prochain emplacement de stationnement disponible, ou -1 si aucun n'est disponible.
+     */
+    public int getNextAvailableSlot(ParkingType parkingType) {
+<span class="nc" id="L26">        Connection con = null;</span>
+<span class="nc" id="L27">        int result = -1;</span>
         try {
-<span class="nc" id="L23">            con = dataBaseConfig.getConnection();</span>
-<span class="nc" id="L24">            PreparedStatement ps = con.prepareStatement(DBConstants.GET_NEXT_PARKING_SPOT);</span>
-<span class="nc" id="L25">            ps.setString(1, parkingType.toString());</span>
-<span class="nc" id="L26">            ResultSet rs = ps.executeQuery();</span>
-<span class="nc bnc" id="L27" title="All 2 branches missed.">            if(rs.next()){</span>
-<span class="nc" id="L28">                result = rs.getInt(1);;</span>
+<span class="nc" id="L29">            con = dataBaseConfig.getConnection();</span>
+<span class="nc" id="L30">            PreparedStatement ps = con.prepareStatement(DBConstants.GET_NEXT_PARKING_SPOT);</span>
+            // Remplissage du paramètre de la requête SQL pour obtenir le prochain emplacement disponible.
+<span class="nc" id="L32">            ps.setString(1, parkingType.toString());</span>
+<span class="nc" id="L33">            ResultSet rs = ps.executeQuery();</span>
+<span class="nc bnc" id="L34" title="All 2 branches missed.">            if (rs.next()) {</span>
+<span class="nc" id="L35">                result = rs.getInt(1);</span>
             }
-<span class="nc" id="L30">            dataBaseConfig.closeResultSet(rs);</span>
-<span class="nc" id="L31">            dataBaseConfig.closePreparedStatement(ps);</span>
-<span class="nc" id="L32">        }catch (Exception ex){</span>
-<span class="nc" id="L33">            logger.error(&quot;Error fetching next available slot&quot;,ex);</span>
-        }finally {
-<span class="nc" id="L35">            dataBaseConfig.closeConnection(con);</span>
+<span class="nc" id="L37">            dataBaseConfig.closeResultSet(rs);</span>
+<span class="nc" id="L38">            dataBaseConfig.closePreparedStatement(ps);</span>
+<span class="nc" id="L39">        } catch (Exception ex) {</span>
+<span class="nc" id="L40">            logger.error(&quot;Error fetching next available slot&quot;, ex);</span>
+        } finally {
+<span class="nc" id="L42">            dataBaseConfig.closeConnection(con);</span>
         }
-<span class="nc" id="L37">        return result;</span>
+<span class="nc" id="L44">        return result;</span>
     }
 
-    public boolean updateParking(ParkingSpot parkingSpot){
-        //update the availability fo that parking slot
-<span class="nc" id="L42">        Connection con = null;</span>
+    /**
+     * Met à jour la disponibilité d'un emplacement de stationnement.
+     *
+     * @param parkingSpot L'objet ParkingSpot contenant les informations de l'emplacement à mettre à jour.
+     * @return true si la mise à jour a réussi, false sinon.
+     */
+    public boolean updateParking(ParkingSpot parkingSpot) {
+        // Met à jour la disponibilité de cet emplacement de stationnement.
+<span class="nc" id="L55">        Connection con = null;</span>
         try {
-<span class="nc" id="L44">            con = dataBaseConfig.getConnection();</span>
-<span class="nc" id="L45">            PreparedStatement ps = con.prepareStatement(DBConstants.UPDATE_PARKING_SPOT);</span>
-<span class="nc" id="L46">            ps.setBoolean(1, parkingSpot.isAvailable());</span>
-<span class="nc" id="L47">            ps.setInt(2, parkingSpot.getId());</span>
-<span class="nc" id="L48">            int updateRowCount = ps.executeUpdate();</span>
-<span class="nc" id="L49">            dataBaseConfig.closePreparedStatement(ps);</span>
-<span class="nc bnc" id="L50" title="All 2 branches missed.">            return (updateRowCount == 1);</span>
-<span class="nc" id="L51">        }catch (Exception ex){</span>
-<span class="nc" id="L52">            logger.error(&quot;Error updating parking info&quot;,ex);</span>
-<span class="nc" id="L53">            return false;</span>
-        }finally {
-<span class="nc" id="L55">            dataBaseConfig.closeConnection(con);</span>
+<span class="nc" id="L57">            con = dataBaseConfig.getConnection();</span>
+<span class="nc" id="L58">            PreparedStatement ps = con.prepareStatement(DBConstants.UPDATE_PARKING_SPOT);</span>
+            // Remplissage des paramètres de la requête SQL pour mettre à jour un emplacement de stationnement.
+<span class="nc" id="L60">            ps.setBoolean(1, parkingSpot.isAvailable());</span>
+<span class="nc" id="L61">            ps.setInt(2, parkingSpot.getId());</span>
+<span class="nc" id="L62">            int updateRowCount = ps.executeUpdate();</span>
+<span class="nc" id="L63">            dataBaseConfig.closePreparedStatement(ps);</span>
+<span class="nc bnc" id="L64" title="All 2 branches missed.">            return (updateRowCount == 1);</span>
+<span class="nc" id="L65">        } catch (Exception ex) {</span>
+<span class="nc" id="L66">            logger.error(&quot;Error updating parking info&quot;, ex);</span>
+<span class="nc" id="L67">            return false;</span>
+        } finally {
+<span class="nc" id="L69">            dataBaseConfig.closeConnection(con);</span>
         }
     }
-
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

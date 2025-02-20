@@ -8,5 +8,9 @@
     public static final String SAVE_TICKET = &quot;insert into ticket(PARKING_NUMBER, VEHICLE_REG_NUMBER, PRICE, IN_TIME, OUT_TIME) values(?,?,?,?,?)&quot;;
     public static final String UPDATE_TICKET = &quot;update ticket set PRICE=?, OUT_TIME=? where ID=?&quot;;
     public static final String GET_TICKET = &quot;select t.PARKING_NUMBER, t.ID, t.PRICE, t.IN_TIME, t.OUT_TIME, p.TYPE from ticket t,parking p where p.parking_number = t.parking_number and t.VEHICLE_REG_NUMBER=? order by t.IN_TIME  limit 1&quot;;
+
+    // SQL Query pour compter le nombre de billets pour un numéro d'enregistrement du véhicule donné
+    public static final String COUNT_TICKETS = &quot;SELECT COUNT(*) FROM ticket WHERE VEHICLE_REG_NUMBER = ?&quot;;
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
