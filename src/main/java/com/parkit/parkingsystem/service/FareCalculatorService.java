@@ -5,7 +5,7 @@ import com.parkit.parkingsystem.model.Ticket;
 
 public class FareCalculatorService {
 
-    public void calculateFare(Ticket ticket) {
+    public void calculateFare(Ticket ticket, boolean discount) {
         if ((ticket.getOutTime() == null) || (ticket.getOutTime().before(ticket.getInTime()))) {
             throw new IllegalArgumentException("Out time provided is incorrect:" + ticket.getOutTime());
         }
@@ -15,24 +15,35 @@ public class FareCalculatorService {
         long outTimeMillis = ticket.getOutTime().getTime();
         long durationMinutes = (outTimeMillis - inTimeMillis) / (1000 * 60); // Convertit en minutes
 
-        // Gratuité pour les durées inférieures à 30 minutes
+        // Parking gratuit pour moins de 30 minutes
         if (durationMinutes < 30) {
             ticket.setPrice(0);
-            return; // Quitte la méthode, car aucun calcul supplémentaire n'est nécessaire
+            return;
         }
 
-        // Calcul tarifaire habituel
+        // Calcul du tarif
+        double price = 0;
         switch (ticket.getParkingSpot().getParkingType()) {
             case CAR: {
-                ticket.setPrice((durationMinutes / 60.0) * Fare.CAR_RATE_PER_HOUR); // En heures
+                price = (durationMinutes / 60.0) * Fare.CAR_RATE_PER_HOUR;
                 break;
             }
             case BIKE: {
-                ticket.setPrice((durationMinutes / 60.0) * Fare.BIKE_RATE_PER_HOUR);
+                price = (durationMinutes / 60.0) * Fare.BIKE_RATE_PER_HOUR;
                 break;
             }
             default:
                 throw new IllegalArgumentException("Unknown Parking Type");
         }
+
+        // Applique la remise si applicable
+        if (discount) {
+            price *= 0.95; // Réduction de 5 %
+        }
+
+        ticket.setPrice(price);
+    }
+    public void calculateFare(Ticket ticket) {
+        calculateFare(ticket, false); // Par défaut : aucune réduction
     }
 }
