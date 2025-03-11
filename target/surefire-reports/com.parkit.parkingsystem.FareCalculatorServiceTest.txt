@@ -1,4 +1,12 @@
 -------------------------------------------------------------------------------
 Test set: com.parkit.parkingsystem.FareCalculatorServiceTest
 -------------------------------------------------------------------------------
-Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.503 s - in com.parkit.parkingsystem.FareCalculatorServiceTest
+Tests run: 9, Failures: 2, Errors: 0, Skipped: 0, Time elapsed: 0.188 s <<< FAILURE! - in com.parkit.parkingsystem.FareCalculatorServiceTest
+calculateFareBikeWithLessThan30minutesParkingTime  Time elapsed: 0.011 s  <<< FAILURE!
+org.opentest4j.AssertionFailedError: Le parking doit être gratuit pour moins de 30 minutes pour une moto ==> expected: <0.0> but was: <0.48333333333333334>
+	at com.parkit.parkingsystem.FareCalculatorServiceTest.calculateFareBikeWithLessThan30minutesParkingTime(FareCalculatorServiceTest.java:156)
+
+calculateFareCarWithLessThan30minutesParkingTime  Time elapsed: 0 s  <<< FAILURE!
+org.opentest4j.AssertionFailedError: Le parking doit être gratuit pour moins de 30 minutes pour une voiture ==> expected: <0.0> but was: <0.725>
+	at com.parkit.parkingsystem.FareCalculatorServiceTest.calculateFareCarWithLessThan30minutesParkingTime(FareCalculatorServiceTest.java:140)
+
