@@ -10,17 +10,21 @@ public class FareCalculatorService {
             throw new IllegalArgumentException("Out time provided is incorrect:" + ticket.getOutTime());
         }
 
-        // Conversion en millisecondes pour gérer les cas longue durée
+        // Temps passé au parking en millisecondes
         long inTimeMillis = ticket.getInTime().getTime();
         long outTimeMillis = ticket.getOutTime().getTime();
+        long durationMinutes = (outTimeMillis - inTimeMillis) / (1000 * 60); // Convertit en minutes
 
-        // Durée en minutes
-        long durationMinutes = (outTimeMillis - inTimeMillis) / (1000 * 60); // 1000ms = 1s, 60s = 1min
+        // Gratuité pour les durées inférieures à 30 minutes
+        if (durationMinutes < 30) {
+            ticket.setPrice(0);
+            return; // Quitte la méthode, car aucun calcul supplémentaire n'est nécessaire
+        }
 
-        // Calcul du tarif (exemple : voiture ou moto)
+        // Calcul tarifaire habituel
         switch (ticket.getParkingSpot().getParkingType()) {
             case CAR: {
-                ticket.setPrice((durationMinutes / 60.0) * Fare.CAR_RATE_PER_HOUR);
+                ticket.setPrice((durationMinutes / 60.0) * Fare.CAR_RATE_PER_HOUR); // En heures
                 break;
             }
             case BIKE: {
