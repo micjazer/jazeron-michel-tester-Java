@@ -1,0 +1,24 @@
+[33mf8f038f[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mdev[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/dev[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmaster[m[33m)[m Ccomplémentdu test processExitingVehicleTest avec des mocks, incluant getNbTicket()
+[33m4496b58[m sauvegarde de l'état initial des tests et couverture JaCoCo
+[33m8298282[m Intégration de la vérification des utilisateurs récurrents dans ParkingService
+[33m9954e95[m Ajout d'une méthode pour compter le nombre de ticket pour un véhicule
+[33m9a9cf71[m Validation des tests pour la fonctionnalité des 5% de remise
+[33m2310635[m Implémentation des 5% de remise pour les utilisateurs récurrents
+[33m6dbde44[m Ajout de tests unitaires pour la fonctionnalité de 5% de remise (voiture et moto)
+[33m7ca2592[m Test complémentaire pour vérifier le stationnement exactement pour 30 minutes de stationnement
+[33m014c37f[m Validation des tests pour le parking gratuit
+[33m914726a[m Ajout de la gratuité pour les stationnements inférieurs à 30 minutes
+[33mc9071dd[m ajouter des tests unitaires pour parking gratuit (<30 min) pour voiture et moto
+[33m0130add[m Test ok suite aux corrections pour le calcul de la durée et les cas des tests
+[33m4d6a4ba[m Correction du bug : calcul des duurées négatives pour les séjours > 24
+[33mea4e5c8[m Mise en place du projet et de la branche dev. et modification du calcul de la durée pour utiliser getTime()
+[33m38f0468[m misc changes
+[33mdde4da6[m Update README.md
+[33mbb787e1[m Update README.md
+[33m0e9f8f1[m updated sure fire plugin settings
+[33m1b43bc4[m Update README.md
+[33m437261c[m Create Data.sql
+[33m1404fd2[m Update README.md
+[33m7d0a1db[m Update README.md
+[33m254e743[m Create README.md
+[33m2a57009[m initial commit
