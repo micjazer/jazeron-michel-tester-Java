@@ -171,5 +171,39 @@ public class FareCalculatorServiceTest {
         // Assert : Parking non gratuit (prix > 0)
         assertTrue(ticket.getPrice() > 0, "Le parking ne doit pas être gratuit pour exactement 30 minutes");
     }
+    @Test
+    void calculateFareCarWithDiscount() {
+        // Arrange: création d'un ticket pour plus de 30 minutes (ex: 1 heure)
+        Date inTime = new Date(System.currentTimeMillis() - (60 * 60 * 1000)); // 1h avant
+        Date outTime = new Date();
+        Ticket ticket = new Ticket();
+        ticket.setInTime(inTime);
+        ticket.setOutTime(outTime);
+        ticket.setParkingSpot(new ParkingSpot(1, ParkingType.CAR, false));
+
+        // Act: Calcul du tarif avec le paramètre discount = true
+        fareCalculatorService.calculateFare(ticket, true);
+
+        // Assert: Vérifier que le prix est 95% du tarif plein (1h * tarif voiture)
+        double expectedPrice = Fare.CAR_RATE_PER_HOUR * 0.95; // 5% de remise
+        assertEquals(expectedPrice, ticket.getPrice(), 0.01, "Le tarif pour une voiture avec réduction doit être correct");
+    }
+    @Test
+    void calculateFareBikeWithDiscount() {
+        // Arrange: création d'un ticket pour plus de 30 minutes (ex: 1 heure)
+        Date inTime = new Date(System.currentTimeMillis() - (60 * 60 * 1000)); // 1h avant
+        Date outTime = new Date();
+        Ticket ticket = new Ticket();
+        ticket.setInTime(inTime);
+        ticket.setOutTime(outTime);
+        ticket.setParkingSpot(new ParkingSpot(1, ParkingType.BIKE, false));
+
+        // Act: Calcul du tarif avec le paramètre discount = true
+        fareCalculatorService.calculateFare(ticket, true);
+
+        // Assert: Vérifier que le prix est 95% du tarif plein (1h * tarif moto)
+        double expectedPrice = Fare.BIKE_RATE_PER_HOUR * 0.95; // 5% de remise
+        assertEquals(expectedPrice, ticket.getPrice(), 0.01, "Le tarif pour une moto avec réduction doit être correct");
+    }
 
 }
