@@ -155,5 +155,21 @@ public class FareCalculatorServiceTest {
         // Assert : Vérifie que le tarif est gratuit (0)
         assertEquals(0, ticket.getPrice(), "Le parking doit être gratuit pour moins de 30 minutes pour une moto");
     }
+    @Test
+    void calculateFareCarWithExactly30MinutesParkingTime() {
+        // Arrange : durée exacte de 30 minutes
+        Date inTime = new Date();
+        Date outTime = new Date(inTime.getTime() + (30 * 60 * 1000)); // Exactement 30 minutes
+        Ticket ticket = new Ticket();
+        ticket.setInTime(inTime);
+        ticket.setOutTime(outTime);
+        ticket.setParkingSpot(new ParkingSpot(1, ParkingType.CAR, false));
+
+        // Act : Calcul du tarif
+        fareCalculatorService.calculateFare(ticket);
+
+        // Assert : Parking non gratuit (prix > 0)
+        assertTrue(ticket.getPrice() > 0, "Le parking ne doit pas être gratuit pour exactement 30 minutes");
+    }
 
 }
