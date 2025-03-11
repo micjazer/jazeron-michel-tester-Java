@@ -53,9 +53,24 @@ public class ParkingServiceTest {
     }
 
     @Test
-    public void processExitingVehicleTest(){
+    void processExitingVehicleTest() throws Exception {
         parkingService.processExitingVehicle();
         verify(parkingSpotDAO, Mockito.times(1)).updateParking(any(ParkingSpot.class));
+
+            // Arrange
+            when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
+            when(ticketDAO.getTicket(anyString())).thenReturn(new Ticket());
+            doReturn(true).when(ticketDAO).updateTicket(any(Ticket.class));
+            when(ticketDAO.getNbTicket(anyString())).thenReturn(2); // Utilisateur récurrent
+
+            // Act
+            parkingService.processExitingVehicle();
+
+            // Assert
+            verify(ticketDAO, times(1)).getTicket("ABCDEF");
+            verify(fareCalculatorService, times(1)).calculateFare(any(Ticket.class), eq(true)); // Remise attendue
+            verify(parkingSpotDAO, times(1)).updateParking(any(ParkingSpot.class));
+        }
     }
 
-}
+
